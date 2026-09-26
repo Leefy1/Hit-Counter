@@ -1,0 +1,51 @@
+name: Build
+on: [pull_request, push]
+
+jobs:
+  validate-wrapper:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: gradle/actions/wrapper-validation@v6
+
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - minecraft: '26.2'
+            directory: '26.2'
+            branch: '26.2'
+            java: '25'
+          - minecraft: '1.21.11'
+            directory: '1.21.11'
+            branch: '1.21.11'
+            java: '21'
+    steps:
+      - uses: actions/checkout@v6
+      - id: project
+        name: Select project
+        shell: bash
+        run: |
+          if [ -f "${{ matrix.directory }}/gradlew" ]; then
+            echo "directory=${{ matrix.directory }}" >> "$GITHUB_OUTPUT"
+          elif [ -f "gradlew" ] && { [ "${{ github.ref_name }}" = "${{ matrix.branch }}" ] || [ "${{ github.head_ref }}" = "${{ matrix.branch }}" ]; }; then
+            echo "directory=." >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.project.outputs.skip != 'true'
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'microsoft'
+      - if: steps.project.outputs.skip != 'true'
+        name: Build Minecraft ${{ matrix.minecraft }}
+        working-directory: ${{ steps.project.outputs.directory }}
+        run: chmod +x ./gradlew && ./gradlew build
+      - if: steps.project.outputs.skip != 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: Hit-Counter-${{ matrix.minecraft }}
+          path: ${{ steps.project.outputs.directory }}/build/libs/*.jar
