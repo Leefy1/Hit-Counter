@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "hit-counter",
+	"version": "${version}",
+	"name": "Hit Counter",
+	"description": "Tracks your per-player PvP hit balance beside player nameplates.",
+	"authors": ["_Leefy"],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/player-hit-counter",
+		"sources": "https://github.com/Leefy1/Hit-Counter",
+		"issues": "https://github.com/Leefy1/Hit-Counter/issues",
+		"license": "https://github.com/Leefy1/Hit-Counter/blob/26.2/LICENSE"
+	},
+	"license": "Hit Counter License",
+	"icon": "assets/hit-counter/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.leefy.HitCounterClient"
+		],
+		"modmenu": [
+			"com.leefy.HitCounterModMenu"
+		]
+	},
+	"mixins": [
+		{
+			"config": "hit-counter.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*",
+		"yet_another_config_lib_v3": ">=3.9.4"
+	}
+}

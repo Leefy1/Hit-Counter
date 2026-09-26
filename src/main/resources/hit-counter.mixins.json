@@ -1,0 +1,21 @@
+{
+	"required": true,
+	"package": "com.leefy.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+	],
+  "client": [
+    "EntityRenderStateMixin",
+		"ClientCommonPacketListenerMixin",
+		"ClientPacketListenerMixin",
+		"MultiPlayerGameModeMixin",
+		"EntityRendererMixin",
+		"TextDisplayRendererMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
